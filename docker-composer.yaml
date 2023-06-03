@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  stable-diffusion-web-ui:
+    build:
+      context: ./services-context-definitions/stable-diffusion-web-ui
+      dockerfile: Dockerfile
+    devices:
+      - /dev/nvidiactl
+      - /dev/nvidia-uvm
+      - /dev/nvidia0
+    environment:
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    ports:
+      - ${PORT:-7860}:7860
+    volumes:
+      - ./.volume/app/:/app
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities: [gpu, compute, utility]
+
+
